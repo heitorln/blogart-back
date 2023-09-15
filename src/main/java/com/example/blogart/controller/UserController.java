@@ -1,11 +1,11 @@
 package com.example.blogart.controller;
 
-import com.example.blogart.user.User;
-import com.example.blogart.user.UserRepository;
+import com.example.blogart.domain.user.User;
+import com.example.blogart.repositories.UserRepository;
+import com.example.blogart.dtos.user.UserRequestDTO;
+import com.example.blogart.dtos.user.UserResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,8 +15,14 @@ public class UserController {
     @Autowired
     private UserRepository repository;
     @GetMapping
-    public List<User> getAll(){
+    public List<UserResponseDTO> getAll(){
 
-        return repository.findAll();
+        return repository.findAll().stream().map(UserResponseDTO::new).toList();
+    }
+
+    @PostMapping
+    public void saveNew(@RequestBody UserRequestDTO body){
+        User newUser = new User(body);
+        repository.save(newUser);
     }
 }

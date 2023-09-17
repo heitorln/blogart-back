@@ -2,8 +2,10 @@ package com.example.blogart.controllers;
 
 import com.example.blogart.domain.user.User;
 import com.example.blogart.dtos.auth.AuthenticationDTO;
+import com.example.blogart.dtos.auth.LoginResponseDTO;
 import com.example.blogart.dtos.user.UserRequestDTO;
 import com.example.blogart.repositories.UserRepository;
+import com.example.blogart.services.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,17 @@ public class AuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDTO body){
         var usernamePassword = new UsernamePasswordAuthenticationToken(body.username(), body.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("/register")

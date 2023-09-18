@@ -23,12 +23,13 @@ public class PostController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<PostResponseDTO> createPost(@RequestBody @Valid PostRequestDTO body){
+    public ResponseEntity<PostResponseDTO> createPost(@RequestBody @Valid PostRequestDTO body,
+                                                      @RequestHeader("Authorization") String token){
         User user = userService.findUserById(body.userId());
 
         Post newPost = new Post(body.title(), body.content(), user);
 
-        PostResponseDTO response = postService.createPost(newPost);
+        PostResponseDTO response = postService.createPost(newPost, token);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -57,4 +58,6 @@ public class PostController {
         postService.deletePost(postId, userId, token);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    //TODO Edit posts?
 }

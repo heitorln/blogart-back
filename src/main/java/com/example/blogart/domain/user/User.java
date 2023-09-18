@@ -1,6 +1,5 @@
 package com.example.blogart.domain.user;
 
-import com.example.blogart.dtos.user.UserRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

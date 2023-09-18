@@ -30,7 +30,7 @@ public class TokenService {
         }
     }
 
-    public String validateToken(String token){
+    public String getUsernameFromToken(String token){
         try {
             Algorithm alg = Algorithm.HMAC256(secret);
             return JWT.require(alg)
@@ -43,7 +43,12 @@ public class TokenService {
         }
     }
 
+    public boolean validateToken(String token, String username){
+        String token_ = token.replace("Bearer ", "");
+        return getUsernameFromToken(token_).equals(username);
+    }
+
     public Instant genExpirationDate(){
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-3:00"));
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }
